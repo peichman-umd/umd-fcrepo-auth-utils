@@ -1,6 +1,9 @@
 # UMD Libraries Fedora 4 Authentication Utilities
 
-A utility to generate JWT tokens based on LDAP user roles.
+* [AuthTokenService](src/java/edu/umd/lib/fcrepo/AuthTokenService.java): Generate JWT auth tokens.
+* [LdapRoleLookupService](src/java/edu/umd/lib/fcrepo/LdapRoleLookupService.java): Look up a
+  user in an LDAP directory and return either "fedoraAdmin" or "fedoraUser", depending on the
+  configured role mappings.
 
 ## Build
 
