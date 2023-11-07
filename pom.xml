@@ -10,12 +10,13 @@
     <packaging>jar</packaging>
   
     <properties>
-      <apache.commons.validator.version>1.7</apache.commons.validator.version>
-      <logback.version>1.1.7</logback.version>
-      <java.cas.client.version>3.6.0</java.cas.client.version>
-      <warFileName>${project.artifactId}-${project.version}</warFileName>
-      <junit.version>4.13.1</junit.version>
-      <jwt.version>0.11.2</jwt.version>
+        <apache.commons.validator.version>1.7</apache.commons.validator.version>
+        <logback.version>1.1.7</logback.version>
+        <jersey.version>2.24</jersey.version>
+        <java.cas.client.version>3.6.0</java.cas.client.version>
+        <warFileName>${project.artifactId}-${project.version}</warFileName>
+        <junit.version>4.13.1</junit.version>
+        <jwt.version>0.11.2</jwt.version>
     </properties>
   
     <distributionManagement>
@@ -57,58 +58,62 @@
     </repositories>
   
     <dependencies>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-  
-      <dependency>
-        <groupId>org.jasig.cas.client</groupId>
-        <artifactId>cas-client-core</artifactId>
-        <version>${java.cas.client.version}</version>
-      </dependency>
-      <dependency>
-          <groupId>org.ldaptive</groupId>
-          <artifactId>ldaptive</artifactId>
-          <version>1.2.4</version>
-      </dependency>
-      
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-api</artifactId>
-        <version>${jwt.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-impl</artifactId>
-        <version>${jwt.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
-        <version>${jwt.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <!-- Uncomment this next dependency if you are using JDK 10 or earlier and you also want to use
-           RSASSA-PSS (PS256, PS384, PS512) algorithms.  JDK 11 or later does not require it for those algorithms:
-      <dependency>
-          <groupId>org.bouncycastle</groupId>
-          <artifactId>bcprov-jdk15on</artifactId>
-          <version>1.60</version>
+        <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+          <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.glassfish.jersey.ext</groupId>
+          <artifactId>jersey-spring3</artifactId>
+          <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jasig.cas.client</groupId>
+          <artifactId>cas-client-core</artifactId>
+          <version>${java.cas.client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ldaptive</groupId>
+            <artifactId>ldaptive</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+    
+        <dependency>
+          <groupId>io.jsonwebtoken</groupId>
+          <artifactId>jjwt-api</artifactId>
+          <version>${jwt.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>io.jsonwebtoken</groupId>
+          <artifactId>jjwt-impl</artifactId>
+          <version>${jwt.version}</version>
           <scope>runtime</scope>
-      </dependency>
-      -->
-      
-      <!-- Test dependencies --> 
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
+        </dependency>
+        <dependency>
+          <groupId>io.jsonwebtoken</groupId>
+          <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+          <version>${jwt.version}</version>
+          <scope>runtime</scope>
+        </dependency>
+        <!-- Uncomment this next dependency if you are using JDK 10 or earlier and you also want to use
+             RSASSA-PSS (PS256, PS384, PS512) algorithms.  JDK 11 or later does not require it for those algorithms:
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.60</version>
+            <scope>runtime</scope>
+        </dependency>
+        -->
+
+        <!-- Test dependencies --> 
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>${junit.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
 
   </project>
   
