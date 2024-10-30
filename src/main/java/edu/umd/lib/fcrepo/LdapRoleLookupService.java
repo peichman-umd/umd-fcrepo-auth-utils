@@ -10,10 +10,14 @@ import org.ldaptive.LdapEntry;
 import org.ldaptive.LdapException;
 import org.ldaptive.SearchExecutor;
 import org.ldaptive.SearchResult;
+import org.ldaptive.pool.ConnectionPool;
+import org.ldaptive.pool.PooledConnectionFactory;
+import org.ldaptive.pool.SoftLimitConnectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -26,6 +30,8 @@ public class LdapRoleLookupService {
   public static final String USER_ROLE = "fedoraUser";
 
   private ConnectionFactory connectionFactory;
+
+  private ConnectionPool connectionPool;
 
   private String ldapURL;
 
@@ -50,7 +56,11 @@ public class LdapRoleLookupService {
     final ConnectionConfig connectionConfig = new ConnectionConfig(ldapURL);
     connectionConfig.setUseStartTLS(true);
     connectionConfig.setConnectionInitializer(new BindConnectionInitializer(bindDN, new Credential(bindPassword)));
-    connectionFactory = new DefaultConnectionFactory(connectionConfig);
+
+    connectionPool = new SoftLimitConnectionPool(new DefaultConnectionFactory(connectionConfig));
+    connectionPool.initialize();
+    connectionFactory = new PooledConnectionFactory(connectionPool);
+
     searchExecutor = new SearchExecutor();
     searchExecutor.setBaseDn(baseDN);
 
@@ -58,6 +68,11 @@ public class LdapRoleLookupService {
     logger.info("LDAP URL: {} Base DN: {} Bind DN: {}", ldapURL, baseDN, bindDN);
     logger.debug("Group {} => Role {}", adminGroup, ADMIN_ROLE);
     logger.debug("Group {} => Role {}", userGroup, USER_ROLE);
+  }
+
+  @PreDestroy
+  public void teardown() {
+    connectionPool.close();
   }
 
   /**
@@ -70,7 +85,9 @@ public class LdapRoleLookupService {
   public LdapEntry getUserEntry(final String userName) {
     try {
       final String uidFilter = "uid=" + userName;
+      logger.debug("Running LDAP search with filter {}, returning attribute {}", uidFilter, memberAttribute);
       final SearchResult result = searchExecutor.search(connectionFactory, uidFilter, memberAttribute).getResult();
+      logger.debug("Found {} results", result.size());
       return result.getEntry();
     } catch (LdapException e) {
       logger.error("LDAP Exception: " + e);
@@ -173,11 +190,11 @@ public class LdapRoleLookupService {
     this.userGroup = userGroup;
   }
 
-  public SearchExecutor getSearchExecutor() {
-    return searchExecutor;
+  public ConnectionPool getConnectionPool() {
+    return connectionPool;
   }
 
-  public void setSearchExecutor(SearchExecutor searchExecutor) {
-    this.searchExecutor = searchExecutor;
+  public void setConnectionPool(ConnectionPool connectionPool) {
+    this.connectionPool = connectionPool;
   }
 }
