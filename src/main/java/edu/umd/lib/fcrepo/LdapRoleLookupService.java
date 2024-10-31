@@ -10,6 +10,7 @@ import org.ldaptive.LdapEntry;
 import org.ldaptive.LdapException;
 import org.ldaptive.SearchExecutor;
 import org.ldaptive.SearchResult;
+import org.ldaptive.cache.LRUCache;
 import org.ldaptive.pool.ConnectionPool;
 import org.ldaptive.pool.PooledConnectionFactory;
 import org.ldaptive.pool.SoftLimitConnectionPool;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -62,6 +64,7 @@ public class LdapRoleLookupService {
     connectionFactory = new PooledConnectionFactory(connectionPool);
 
     searchExecutor = new SearchExecutor();
+    searchExecutor.setSearchCache(new LRUCache<>(50, Duration.ofMinutes(10), Duration.ofMinutes(5)));
     searchExecutor.setBaseDn(baseDN);
 
     logger.info("Configured LDAP for user role lookup");
