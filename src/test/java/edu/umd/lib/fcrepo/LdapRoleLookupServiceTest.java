@@ -5,10 +5,7 @@ import org.junit.Test;
 import org.ldaptive.LdapAttribute;
 import org.ldaptive.LdapEntry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
